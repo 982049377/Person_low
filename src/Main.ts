@@ -114,9 +114,7 @@ class Main extends egret.DisplayObjectContainer {
     private _personStay:Array<egret.Bitmap> = new Array<egret.Bitmap>();
     private _personWalk:Array<egret.Bitmap> = new Array<egret.Bitmap>();
     private container;
-    private speed:number = 0.05;
-    private timeOnEnterFrame = 0;
-    private i:egret.Bitmap;
+    private _person:egret.Bitmap;
     /**
      * 创建游戏场景
      * Create a game scene
@@ -131,35 +129,35 @@ class Main extends egret.DisplayObjectContainer {
         this.container.x = 250;
         this.container.y = 350;
         */
-        this.i=this.createBitmapByName("10000_png");
+        this._person=this.createBitmapByName("10000_png");
+        this.Play();
         this.stage.$touchEnabled=true;
-        this.i.x=0;
-        this.i.y=0;
-        this.setAnchor(this.i);
+        this._person.x=0;
+        this._person.y=0;
+        this.setAnchor(this._person);
         
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
-        this.addChild(this.i);
-        //this.container.addchild(i);
-/*
-        {
-            this._personStay.push(this.createBitmapByName("10001_png"));
-            this._personStay.push(this.createBitmapByName("10002_png"));
-            this._personStay.push(this.createBitmapByName("10003_png"));
-            this._personStay.push(this.createBitmapByName("10004_png"));
-            this._personStay.push(this.createBitmapByName("10005_png"));
-            this._personStay.push(this.createBitmapByName("10006_png"));
-            this._personStay.push(this.createBitmapByName("10007_png"));
-        }*/
-
+        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
+        this.addChild(this._person);
         function setposition(evt:egret.TouchEvent){
-            egret.Tween.get(this.i).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
+            egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
         }
 
+
     }
-    private setAnchor(e:egret.Bitmap)
+    private Play():void{
+        this._person=this.createBitmapByName("10000_png");
+        this._person=this.createBitmapByName("10001_png");
+        this._person=this.createBitmapByName("10002_png");
+        this._person=this.createBitmapByName("10003_png");
+        this._person=this.createBitmapByName("10004_png");
+        this._person=this.createBitmapByName("10005_png");
+        this._person=this.createBitmapByName("10006_png");
+        this._person=this.createBitmapByName("10007_png");
+    }
+    private setAnchor(e:egret.Bitmap):void
     {
-         e.$setAnchorOffsetX(e.width/2);
-         e.$setAnchorOffsetY(e.height/2);
+        e.$setAnchorOffsetX(e.width/2);
+        e.$setAnchorOffsetY(e.height/2);
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

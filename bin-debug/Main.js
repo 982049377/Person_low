@@ -33,8 +33,6 @@ var Main = (function (_super) {
         _super.call(this);
         this._personStay = new Array();
         this._personWalk = new Array();
-        this.speed = 0.05;
-        this.timeOnEnterFrame = 0;
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
     var d = __define,c=Main,p=c.prototype;
@@ -115,14 +113,13 @@ var Main = (function (_super) {
           this.container.x = 250;
           this.container.y = 350;
           */
-        this.i = this.createBitmapByName("10000_png");
+        this._person = this.createBitmapByName("10000_png");
         this.stage.$touchEnabled = true;
-        this.i.x = 0;
-        this.i.y = 0;
-        this.setAnchor(this.i);
-        console.log(this.i.x + "....." + this.i.y);
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
-        this.addChild(this.i);
+        this._person.x = 0;
+        this._person.y = 0;
+        this.setAnchor(this._person);
+        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
+        this.addChild(this._person);
         //this.container.addchild(i);
         /*
                 {
@@ -135,9 +132,7 @@ var Main = (function (_super) {
                     this._personStay.push(this.createBitmapByName("10007_png"));
                 }*/
         function setposition(evt) {
-            console.log(evt.stageX + "|||||" + evt.stageY);
-            console.log(this.i.x + "....." + this.i.y);
-            egret.Tween.get(this.i).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
+            egret.Tween.get(this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
         }
     };
     p.setAnchor = function (e) {
