@@ -1,9 +1,10 @@
 class Person extends MachineState{
+      private _person:Array<egret.Bitmap> ;
       public constructor() {
         super();
       }
       public Creat(){
-          this._person=egret.
+          this._person.push(this.createBitmapByName("bg_jpg"));
 
       }
       public createBitmapByName(name:string):egret.Bitmap {

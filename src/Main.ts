@@ -111,67 +111,56 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private textfield:egret.TextField;
-
+    private _personStay:Array<egret.Bitmap> = new Array<egret.Bitmap>();
+    private _personWalk:Array<egret.Bitmap> = new Array<egret.Bitmap>();
+    private container;
+    private speed:number = 0.05;
+    private timeOnEnterFrame = 0;
+    private i:egret.Bitmap;
     /**
      * 创建游戏场景
      * Create a game scene
      */
     private createGameScene():void {
-        var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
-        this.addChild(sky);
-        var stageW:number = this.stage.stageWidth;
-        var stageH:number = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
+        var bg=this.createBitmapByName("bg_jpg");
+        //bg.width=this.stage.width;
+        //bg.height=this.stage.height;
+        this.addChild(bg);
+      /*  this.container = new egret.DisplayObjectContainer();
+        this.addChild(this.container);
+        this.container.x = 250;
+        this.container.y = 350;
+        */
+        this.i=this.createBitmapByName("10000_png");
+        this.stage.$touchEnabled=true;
+        this.i.x=0;
+        this.i.y=0;
+        this.setAnchor(this.i);
+        
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
+        this.addChild(this.i);
+        //this.container.addchild(i);
+/*
+        {
+            this._personStay.push(this.createBitmapByName("10001_png"));
+            this._personStay.push(this.createBitmapByName("10002_png"));
+            this._personStay.push(this.createBitmapByName("10003_png"));
+            this._personStay.push(this.createBitmapByName("10004_png"));
+            this._personStay.push(this.createBitmapByName("10005_png"));
+            this._personStay.push(this.createBitmapByName("10006_png"));
+            this._personStay.push(this.createBitmapByName("10007_png"));
+        }*/
 
-        var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, 172);
-        topMask.graphics.endFill();
-        topMask.y = 33;
-        this.addChild(topMask);
+        function setposition(evt:egret.TouchEvent){
+            egret.Tween.get(this.i).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
+        }
 
-        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
-        this.addChild(icon);
-        icon.x = 26;
-        icon.y = 33;
-
-        var line = new egret.Shape();
-        line.graphics.lineStyle(2,0xffffff);
-        line.graphics.moveTo(0,0);
-        line.graphics.lineTo(0,117);
-        line.graphics.endFill();
-        line.x = 172;
-        line.y = 61;
-        this.addChild(line);
-
-
-        var colorLabel = new egret.TextField();
-        colorLabel.textColor = 0xffffff;
-        colorLabel.width = stageW - 172;
-        colorLabel.textAlign = "center";
-        colorLabel.text = "Hello Egret";
-        colorLabel.size = 24;
-        colorLabel.x = 172;
-        colorLabel.y = 80;
-        this.addChild(colorLabel);
-
-        var textfield = new egret.TextField();
-        this.addChild(textfield);
-        textfield.alpha = 0;
-        textfield.width = stageW - 172;
-        textfield.textAlign = egret.HorizontalAlign.CENTER;
-        textfield.size = 24;
-        textfield.textColor = 0xffffff;
-        textfield.x = 172;
-        textfield.y = 135;
-        this.textfield = textfield;
-
-        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description_json", this.startAnimation, this)
     }
-
+    private setAnchor(e:egret.Bitmap)
+    {
+         e.$setAnchorOffsetX(e.width/2);
+         e.$setAnchorOffsetY(e.height/2);
+    }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
