@@ -135,57 +135,61 @@ class Main extends egret.DisplayObjectContainer {
         this._person.x=111;
         this._person.y=111;
         this.setAnchor(this._person);
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
-        this.addChild(this._person);
-        function setposition(evt:egret.TouchEvent,main:Main){
-            main=this.parent.Main;
-            main.WalkPlay();
-            main.StopIdlePlay();
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,(evt:egret.TouchEvent)=>{
+            this.WalkPlay();
+            this.StopIdlePlay();
             egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
-        }
+            if(this._person.x==evt.stageX && this._person.y==evt.stageY){
+                this.StopWalkPlay();
+                this.PlayIdle();
+                console.log("123456498");
+            }
+        },this);
+        this.addChild(this._person);
     }
     private IdlePlay(){
-        
-        //var i=-1;
-       //egret.Ticker.getInstance().register(Play,this);
         egret.startTick(this.PlayIdle,this);
-        /*function Play():boolean{
-            i++;
-            if(i>=list.length)
-                i=0;
-            //var na=(i+10000).toString()+"_png";
-            console.log(i);
-            this._person.texture=RES.getRes(list[i]);
-             return false;
-        } */
     }
     private Idlelist=["Idle0_png","Idle1_png","Idle2_png","Idle3_png"];
-    private count:number=-1;
+    private Idlecount:number=-1;
     private PlayIdle():boolean{
-        this.count++;
-        if(this.count>=this.Idlelist.length)
-            this.count=0;
-        //var na=(i+10000).toString()+"_png";
-        console.log(this.count);
-        this._person.texture=RES.getRes(this.Idlelist[this.count]);
-            return false;
+        this.Idlecount++;
+        this.i++;
+        if(this.Idlecount>=this.Idlelist.length)
+            this.Idlecount=0;
+        //console.log(this.Idlecount);
+        if(this.i==10){
+            this._person.texture=RES.getRes(this.Idlelist[this.Idlecount]);
+            this.i=0
+        }
+        return false;
     }
     private StopIdlePlay(){
         egret.stopTick(this.PlayIdle,this);
     }
+    private Walklist=["10000_png","10001_png","10002_png","10003_png","10004_png","10005_png","10006_png","10007_png"];
+    private Walkcount=-1;
+    private i=0;
     private WalkPlay(){
-        var list=["10000_png","10001_png","10002_png","10003_png","10004_png","10005_png","10006_png","10007_png"];
-        var i=-1;
-        egret.Ticker.getInstance().register(Play,this);
-        function Play(){
-            i++;
-            if(i>=list.length)
-                i=0;
-            //var na=(i+10000).toString()+"_png";
-            console.log(i);
-            this._person.texture=RES.getRes(list[i]);
-        } 
+        egret.startTick(this.PlayWalk,this);
     }
+    private PlayWalk():boolean{
+        this.Walkcount++;
+        this.i++;
+        console.log(this.i);
+        if(this.Walkcount>=this.Walklist.length)
+            this.Walkcount=0;
+        if(this.i==10){
+            this._person.texture=RES.getRes(this.Walklist[this.Walkcount]);
+            this.i=0;
+        }
+        return false;
+    }
+     private StopWalkPlay(){
+        egret.stopTick(this.PlayWalk,this);
+    }
+
+
     private setAnchor(e:egret.Bitmap):void
     {
         e.$setAnchorOffsetX(e.width/2);

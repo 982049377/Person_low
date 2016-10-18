@@ -1,5 +1,6 @@
 class Person extends egret.DisplayObjectContainer{
-      private _person:egret.Bitmap;
+      public _person:egret.Bitmap;
+      private stata:PersonState=new PersonState();
       public constructor() {
         super();
       }
@@ -9,24 +10,16 @@ class Person extends egret.DisplayObjectContainer{
         this._person.x=0;
         this._person.y=0;
         this.setAnchor(this._person);
-        
+        var walk:Walk=new Walk();
+        var idle:Idle=new Idle ();
+        idle.onEnter();
         this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
         this.addChild(this._person);
-        //this.container.addchild(i);
-/*
-        {
-            this._personStay.push(this.createBitmapByName("10001_png"));
-            this._personStay.push(this.createBitmapByName("10002_png"));
-            this._personStay.push(this.createBitmapByName("10003_png"));
-            this._personStay.push(this.createBitmapByName("10004_png"));
-            this._personStay.push(this.createBitmapByName("10005_png"));
-            this._personStay.push(this.createBitmapByName("10006_png"));
-            this._personStay.push(this.createBitmapByName("10007_png"));
-        }*/
-
         function setposition(evt:egret.TouchEvent){
+            this.stata.SetState(walk);
             egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
         }
+        this.stata.SetState(idle);
 
       }
       public createBitmapByName(name:string):egret.Bitmap {
@@ -41,4 +34,58 @@ class Person extends egret.DisplayObjectContainer{
          e.$setAnchorOffsetY(e.height/2);
       }
 
+}
+
+interface State  {
+
+      onEnter();
+      
+      onExit();
+  }
+class Idle implements State{
+        private person:Person;
+        private Idlelist=["Idle0_png","Idle1_png","Idle2_png","Idle3_png"];
+        private count:number=-1;
+        onEnter(){
+            egret.startTick(this.PlayIdle,this);
+        }
+        onExit(){
+            egret.stopTick(this.PlayIdle,this);
+        }
+        private PlayIdle():boolean{
+          this.count++;
+          if(this.count>=this.Idlelist.length)
+              this.count=0;
+          //var na=(i+10000).toString()+"_png";
+          console.log(this.count);
+          this.person._person.texture=RES.getRes(this.Idlelist[this.count]);
+          return false;
+        }
+}
+class Walk implements State{
+          private Walklist=["10000_png","10001_png","10002_png","10003_png","10004_png","10005_png","10006_png","10007_png"];
+          private Walkcount=-1;
+          private person:Person;
+          onEnter(){
+                egret.Ticker.getInstance().register(this.PlayWalk,this);
+          }
+          onExit(){
+                egret.Ticker.getInstance().unregister(this.PlayWalk,this);
+          }
+          private PlayWalk(){
+                this.Walkcount++;
+                if(this.Walkcount>=this.Walklist.length)
+                    this.Walkcount=0;
+                this.person._person.texture=RES.getRes(this.Walklist[this.Walkcount]);
+          }
+}
+class PersonState {
+        _State:State;
+        public SetState(e:State){
+            if(this._State){
+                this._State.onExit();
+            }
+            e=this._State;
+            this._State.onEnter();
+         }
 }

@@ -34,7 +34,10 @@ var Main = (function (_super) {
         this._personStay = new Array();
         this._personWalk = new Array();
         this.Idlelist = ["Idle0_png", "Idle1_png", "Idle2_png", "Idle3_png"];
-        this.count = -1;
+        this.Idlecount = -1;
+        this.Walklist = ["10000_png", "10001_png", "10002_png", "10003_png", "10004_png", "10005_png", "10006_png", "10007_png"];
+        this.Walkcount = -1;
+        this.i = 0;
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
     var d = __define,c=Main,p=c.prototype;
@@ -106,6 +109,7 @@ var Main = (function (_super) {
      * Create a game scene
      */
     p.createGameScene = function () {
+        var _this = this;
         var bg = this.createBitmapByName("bg_jpg");
         bg.width = this.stage.stageWidth;
         bg.height = this.stage.stageHeight;
@@ -121,53 +125,53 @@ var Main = (function (_super) {
         this._person.x = 111;
         this._person.y = 111;
         this.setAnchor(this._person);
-        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, function (evt) {
+            _this.WalkPlay();
+            _this.StopIdlePlay();
+            egret.Tween.get(_this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
+            if (_this._person.x == evt.stageX && _this._person.y == evt.stageY) {
+                _this.StopWalkPlay();
+                _this.PlayIdle();
+                console.log("123456498");
+            }
+        }, this);
         this.addChild(this._person);
-        function setposition(evt, main) {
-            main = this.parent.Main;
-            main.WalkPlay();
-            main.StopIdlePlay();
-            egret.Tween.get(this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
-        }
     };
     p.IdlePlay = function () {
-        //var i=-1;
-        //egret.Ticker.getInstance().register(Play,this);
         egret.startTick(this.PlayIdle, this);
-        /*function Play():boolean{
-            i++;
-            if(i>=list.length)
-                i=0;
-            //var na=(i+10000).toString()+"_png";
-            console.log(i);
-            this._person.texture=RES.getRes(list[i]);
-             return false;
-        } */
     };
     p.PlayIdle = function () {
-        this.count++;
-        if (this.count >= this.Idlelist.length)
-            this.count = 0;
-        //var na=(i+10000).toString()+"_png";
-        console.log(this.count);
-        this._person.texture = RES.getRes(this.Idlelist[this.count]);
+        this.Idlecount++;
+        this.i++;
+        if (this.Idlecount >= this.Idlelist.length)
+            this.Idlecount = 0;
+        //console.log(this.Idlecount);
+        if (this.i == 10) {
+            this._person.texture = RES.getRes(this.Idlelist[this.Idlecount]);
+            this.i = 0;
+        }
         return false;
     };
     p.StopIdlePlay = function () {
         egret.stopTick(this.PlayIdle, this);
     };
     p.WalkPlay = function () {
-        var list = ["10000_png", "10001_png", "10002_png", "10003_png", "10004_png", "10005_png", "10006_png", "10007_png"];
-        var i = -1;
-        egret.Ticker.getInstance().register(Play, this);
-        function Play() {
-            i++;
-            if (i >= list.length)
-                i = 0;
-            //var na=(i+10000).toString()+"_png";
-            console.log(i);
-            this._person.texture = RES.getRes(list[i]);
+        egret.startTick(this.PlayWalk, this);
+    };
+    p.PlayWalk = function () {
+        this.Walkcount++;
+        this.i++;
+        console.log(this.i);
+        if (this.Walkcount >= this.Walklist.length)
+            this.Walkcount = 0;
+        if (this.i == 10) {
+            this._person.texture = RES.getRes(this.Walklist[this.Walkcount]);
+            this.i = 0;
         }
+        return false;
+    };
+    p.StopWalkPlay = function () {
+        egret.stopTick(this.PlayWalk, this);
     };
     p.setAnchor = function (e) {
         e.$setAnchorOffsetX(e.width / 2);

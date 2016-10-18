@@ -1,4 +1,4 @@
-   class MachineState {
+  /* class MachineState {
         _State:State;
         public SetState(e:State){
             if(this._State){
@@ -31,3 +31,4 @@
         }
 }
     
+*/
