@@ -33,6 +33,7 @@ var Main = (function (_super) {
         _super.call(this);
         this._personStay = new Array();
         this._personWalk = new Array();
+        this.state = 0;
         this.Idlelist = ["Idle0_png", "Idle1_png", "Idle2_png", "Idle3_png"];
         this.Idlecount = -1;
         this.Walklist = ["10000_png", "10001_png", "10002_png", "10003_png", "10004_png", "10005_png", "10006_png", "10007_png"];
@@ -114,6 +115,9 @@ var Main = (function (_super) {
         bg.width = this.stage.stageWidth;
         bg.height = this.stage.stageHeight;
         this.addChild(bg);
+        /* var p:Person=new Person();
+         p.Creat();
+         this.addChild(p);*/
         /*  this.container = new egret.DisplayObjectContainer();
           this.addChild(this.container);
           this.container.x = 250;
@@ -125,17 +129,34 @@ var Main = (function (_super) {
         this._person.x = 111;
         this._person.y = 111;
         this.setAnchor(this._person);
+        var x;
+        var y;
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, function (evt) {
             _this.WalkPlay();
             _this.StopIdlePlay();
-            egret.Tween.get(_this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
-            if (_this._person.x == evt.stageX && _this._person.y == evt.stageY) {
+            if (_this.state == 0) {
+                egret.Tween.get(_this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
+                console.log(_this._person.x + "," + _this._person.y);
+                console.log(evt.stageX + ",,,,," + evt.stageY);
+            }
+            else {
+                egret.Tween.removeTweens(_this._person);
+                egret.Tween.get(_this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
+            }
+            _this.state = 1;
+            x = evt.stageX;
+            y = evt.stageY;
+        }, this);
+        this.addChild(this._person);
+        egret.startTick(function () {
+            if (_this._person.x == x && _this._person.y == y) {
                 _this.StopWalkPlay();
                 _this.PlayIdle();
                 console.log("123456498");
+                _this.state = 0;
             }
+            return false;
         }, this);
-        this.addChild(this._person);
     };
     p.IdlePlay = function () {
         egret.startTick(this.PlayIdle, this);
@@ -161,7 +182,7 @@ var Main = (function (_super) {
     p.PlayWalk = function () {
         this.Walkcount++;
         this.i++;
-        console.log(this.i);
+        //console.log(this.i);
         if (this.Walkcount >= this.Walklist.length)
             this.Walkcount = 0;
         if (this.i == 10) {

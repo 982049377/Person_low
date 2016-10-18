@@ -2,25 +2,30 @@ var Person = (function (_super) {
     __extends(Person, _super);
     function Person() {
         _super.call(this);
-        this.stata = new PersonState();
     }
     var d = __define,c=Person,p=c.prototype;
+    p.SetState = function (e) {
+        if (this._State) {
+            this._State.onExit();
+        }
+        e = this._State;
+        this._State.onEnter();
+    };
     p.Creat = function () {
         this._person = this.createBitmapByName("10000_png");
-        this.stage.$touchEnabled = true;
         this._person.x = 0;
         this._person.y = 0;
         this.setAnchor(this._person);
         var walk = new Walk();
         var idle = new Idle();
         idle.onEnter();
-        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
+        //this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
         this.addChild(this._person);
         function setposition(evt) {
-            this.stata.SetState(walk);
+            this.SetState(walk);
             egret.Tween.get(this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
         }
-        this.stata.SetState(idle);
+        this.SetState(idle);
     };
     p.createBitmapByName = function (name) {
         var result = new egret.Bitmap();
@@ -80,18 +85,14 @@ var Walk = (function () {
     return Walk;
 }());
 egret.registerClass(Walk,'Walk',["State"]);
-var PersonState = (function () {
-    function PersonState() {
-    }
-    var d = __define,c=PersonState,p=c.prototype;
-    p.SetState = function (e) {
-        if (this._State) {
-            this._State.onExit();
-        }
-        e = this._State;
-        this._State.onEnter();
-    };
-    return PersonState;
-}());
-egret.registerClass(PersonState,'PersonState');
+/*class PersonState {
+        _State:State;
+        public SetState(e:State){
+            if(this._State){
+                this._State.onExit();
+            }
+            e=this._State;
+            this._State.onEnter();
+         }
+}*/ 
 //# sourceMappingURL=Person.js.map

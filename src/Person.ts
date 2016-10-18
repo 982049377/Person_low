@@ -1,25 +1,32 @@
 class Person extends egret.DisplayObjectContainer{
       public _person:egret.Bitmap;
-      private stata:PersonState=new PersonState();
+      //private stata:PersonState=new PersonState();
+      private _State:State;
       public constructor() {
         super();
       }
+      public SetState(e:State){
+          if(this._State){
+              this._State.onExit();
+          }
+          e=this._State;
+          this._State.onEnter();
+        }
       public Creat(){
-        this._person=this.createBitmapByName("10000_png");
-        this.stage.$touchEnabled=true;
+        this._person=this.createBitmapByName("10000_png")
         this._person.x=0;
         this._person.y=0;
         this.setAnchor(this._person);
         var walk:Walk=new Walk();
         var idle:Idle=new Idle ();
         idle.onEnter();
-        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
+        //this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
         this.addChild(this._person);
         function setposition(evt:egret.TouchEvent){
-            this.stata.SetState(walk);
+            this.SetState(walk);
             egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
         }
-        this.stata.SetState(idle);
+        this.SetState(idle);
 
       }
       public createBitmapByName(name:string):egret.Bitmap {
@@ -79,7 +86,7 @@ class Walk implements State{
                 this.person._person.texture=RES.getRes(this.Walklist[this.Walkcount]);
           }
 }
-class PersonState {
+/*class PersonState {
         _State:State;
         public SetState(e:State){
             if(this._State){
@@ -88,4 +95,4 @@ class PersonState {
             e=this._State;
             this._State.onEnter();
          }
-}
+}*/

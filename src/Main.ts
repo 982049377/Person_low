@@ -115,6 +115,7 @@ class Main extends egret.DisplayObjectContainer {
     private _personWalk:Array<egret.Bitmap> = new Array<egret.Bitmap>();
     private container;
     private _person:egret.Bitmap;
+    private state:number=0;
     /**
      * 创建游戏场景
      * Create a game scene
@@ -124,6 +125,9 @@ class Main extends egret.DisplayObjectContainer {
         bg.width=this.stage.stageWidth;
         bg.height=this.stage.stageHeight;
         this.addChild(bg);
+       /* var p:Person=new Person();
+        p.Creat();
+        this.addChild(p);*/
       /*  this.container = new egret.DisplayObjectContainer();
         this.addChild(this.container);
         this.container.x = 250;
@@ -135,17 +139,37 @@ class Main extends egret.DisplayObjectContainer {
         this._person.x=111;
         this._person.y=111;
         this.setAnchor(this._person);
+        var x:number;
+        var y:number;
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,(evt:egret.TouchEvent)=>{
+         
             this.WalkPlay();
             this.StopIdlePlay();
-            egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
-            if(this._person.x==evt.stageX && this._person.y==evt.stageY){
+            if(this.state==0){
+                egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
+                //console.log(this._person.x+","+this._person.y);
+                //console.log(evt.stageX+",,,,,"+evt.stageY);
+            }else{
+                egret.Tween.removeTweens(this._person);
+                egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
+            }
+            this.state=1;
+            x=evt.stageX;
+            y=evt.stageY;
+           
+        },this);
+        this.addChild(this._person);
+        egret.startTick(():boolean=>{
+            if(this._person.x==x && this._person.y==y){
                 this.StopWalkPlay();
                 this.PlayIdle();
                 console.log("123456498");
+                this.state=0;
             }
+            return false;
         },this);
-        this.addChild(this._person);
+
+
     }
     private IdlePlay(){
         egret.startTick(this.PlayIdle,this);
@@ -176,7 +200,7 @@ class Main extends egret.DisplayObjectContainer {
     private PlayWalk():boolean{
         this.Walkcount++;
         this.i++;
-        console.log(this.i);
+        //console.log(this.i);
         if(this.Walkcount>=this.Walklist.length)
             this.Walkcount=0;
         if(this.i==10){
