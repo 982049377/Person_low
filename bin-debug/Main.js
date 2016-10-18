@@ -33,6 +33,8 @@ var Main = (function (_super) {
         _super.call(this);
         this._personStay = new Array();
         this._personWalk = new Array();
+        this.Idlelist = ["Idle0_png", "Idle1_png", "Idle2_png", "Idle3_png"];
+        this.count = -1;
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
     var d = __define,c=Main,p=c.prototype;
@@ -105,8 +107,8 @@ var Main = (function (_super) {
      */
     p.createGameScene = function () {
         var bg = this.createBitmapByName("bg_jpg");
-        //bg.width=this.stage.width;
-        //bg.height=this.stage.height;
+        bg.width = this.stage.stageWidth;
+        bg.height = this.stage.stageHeight;
         this.addChild(bg);
         /*  this.container = new egret.DisplayObjectContainer();
           this.addChild(this.container);
@@ -114,25 +116,57 @@ var Main = (function (_super) {
           this.container.y = 350;
           */
         this._person = this.createBitmapByName("10000_png");
+        this.IdlePlay();
         this.stage.$touchEnabled = true;
-        this._person.x = 0;
-        this._person.y = 0;
+        this._person.x = 111;
+        this._person.y = 111;
         this.setAnchor(this._person);
-        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, setposition, this);
         this.addChild(this._person);
-        //this.container.addchild(i);
-        /*
-                {
-                    this._personStay.push(this.createBitmapByName("10001_png"));
-                    this._personStay.push(this.createBitmapByName("10002_png"));
-                    this._personStay.push(this.createBitmapByName("10003_png"));
-                    this._personStay.push(this.createBitmapByName("10004_png"));
-                    this._personStay.push(this.createBitmapByName("10005_png"));
-                    this._personStay.push(this.createBitmapByName("10006_png"));
-                    this._personStay.push(this.createBitmapByName("10007_png"));
-                }*/
-        function setposition(evt) {
+        function setposition(evt, main) {
+            main = this.parent.Main;
+            main.WalkPlay();
+            main.StopIdlePlay();
             egret.Tween.get(this._person).to({ x: evt.stageX, y: evt.stageY }, 2000, egret.Ease.sineIn);
+        }
+    };
+    p.IdlePlay = function () {
+        //var i=-1;
+        //egret.Ticker.getInstance().register(Play,this);
+        egret.startTick(this.PlayIdle, this);
+        /*function Play():boolean{
+            i++;
+            if(i>=list.length)
+                i=0;
+            //var na=(i+10000).toString()+"_png";
+            console.log(i);
+            this._person.texture=RES.getRes(list[i]);
+             return false;
+        } */
+    };
+    p.PlayIdle = function () {
+        this.count++;
+        if (this.count >= this.Idlelist.length)
+            this.count = 0;
+        //var na=(i+10000).toString()+"_png";
+        console.log(this.count);
+        this._person.texture = RES.getRes(this.Idlelist[this.count]);
+        return false;
+    };
+    p.StopIdlePlay = function () {
+        egret.stopTick(this.PlayIdle, this);
+    };
+    p.WalkPlay = function () {
+        var list = ["10000_png", "10001_png", "10002_png", "10003_png", "10004_png", "10005_png", "10006_png", "10007_png"];
+        var i = -1;
+        egret.Ticker.getInstance().register(Play, this);
+        function Play() {
+            i++;
+            if (i >= list.length)
+                i = 0;
+            //var na=(i+10000).toString()+"_png";
+            console.log(i);
+            this._person.texture = RES.getRes(list[i]);
         }
     };
     p.setAnchor = function (e) {

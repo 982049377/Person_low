@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,10000_png,10001_png,10002_png,10003_png,10004_png,10005_png,10006_png,10007_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,10000_png,10001_png,10002_png,10003_png,10004_png,10005_png,10006_png,10007_png,Idle3_png,Idle0_png,Idle1_png,Idle2_png",
 			"name": "preload"
 		}
 	],
@@ -60,6 +60,26 @@
 			"url": "assets/10007.png",
 			"type": "image",
 			"name": "10007_png"
+		},
+		{
+			"name": "Idle3_png",
+			"type": "image",
+			"url": "assets/Idle3.png"
+		},
+		{
+			"name": "Idle0_png",
+			"type": "image",
+			"url": "assets/Idle0.png"
+		},
+		{
+			"name": "Idle1_png",
+			"type": "image",
+			"url": "assets/Idle1.png"
+		},
+		{
+			"name": "Idle2_png",
+			"type": "image",
+			"url": "assets/Idle2.png"
 		}
 	]
 }

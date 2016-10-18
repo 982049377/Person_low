@@ -121,8 +121,8 @@ class Main extends egret.DisplayObjectContainer {
      */
     private createGameScene():void {
         var bg=this.createBitmapByName("bg_jpg");
-        //bg.width=this.stage.width;
-        //bg.height=this.stage.height;
+        bg.width=this.stage.stageWidth;
+        bg.height=this.stage.stageHeight;
         this.addChild(bg);
       /*  this.container = new egret.DisplayObjectContainer();
         this.addChild(this.container);
@@ -130,29 +130,61 @@ class Main extends egret.DisplayObjectContainer {
         this.container.y = 350;
         */
         this._person=this.createBitmapByName("10000_png");
-        this.Play();
+        this.IdlePlay();
         this.stage.$touchEnabled=true;
-        this._person.x=0;
-        this._person.y=0;
+        this._person.x=111;
+        this._person.y=111;
         this.setAnchor(this._person);
-        
-        this.parent.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP,setposition,this);
         this.addChild(this._person);
-        function setposition(evt:egret.TouchEvent){
+        function setposition(evt:egret.TouchEvent,main:Main){
+            main=this.parent.Main;
+            main.WalkPlay();
+            main.StopIdlePlay();
             egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
         }
-
-
     }
-    private Play():void{
-        this._person=this.createBitmapByName("10000_png");
-        this._person=this.createBitmapByName("10001_png");
-        this._person=this.createBitmapByName("10002_png");
-        this._person=this.createBitmapByName("10003_png");
-        this._person=this.createBitmapByName("10004_png");
-        this._person=this.createBitmapByName("10005_png");
-        this._person=this.createBitmapByName("10006_png");
-        this._person=this.createBitmapByName("10007_png");
+    private IdlePlay(){
+        
+        //var i=-1;
+       //egret.Ticker.getInstance().register(Play,this);
+        egret.startTick(this.PlayIdle,this);
+        /*function Play():boolean{
+            i++;
+            if(i>=list.length)
+                i=0;
+            //var na=(i+10000).toString()+"_png";
+            console.log(i);
+            this._person.texture=RES.getRes(list[i]);
+             return false;
+        } */
+    }
+    private Idlelist=["Idle0_png","Idle1_png","Idle2_png","Idle3_png"];
+    private count:number=-1;
+    private PlayIdle():boolean{
+        this.count++;
+        if(this.count>=this.Idlelist.length)
+            this.count=0;
+        //var na=(i+10000).toString()+"_png";
+        console.log(this.count);
+        this._person.texture=RES.getRes(this.Idlelist[this.count]);
+            return false;
+    }
+    private StopIdlePlay(){
+        egret.stopTick(this.PlayIdle,this);
+    }
+    private WalkPlay(){
+        var list=["10000_png","10001_png","10002_png","10003_png","10004_png","10005_png","10006_png","10007_png"];
+        var i=-1;
+        egret.Ticker.getInstance().register(Play,this);
+        function Play(){
+            i++;
+            if(i>=list.length)
+                i=0;
+            //var na=(i+10000).toString()+"_png";
+            console.log(i);
+            this._person.texture=RES.getRes(list[i]);
+        } 
     }
     private setAnchor(e:egret.Bitmap):void
     {
