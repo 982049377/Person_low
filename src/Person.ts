@@ -27,8 +27,9 @@ class Person extends egret.DisplayObjectContainer{
             egret.Tween.get(this._person).to({x:evt.stageX,y:evt.stageY},2000, egret.Ease.sineIn );
         }
         this.SetState(idle);
-
       }
+
+
       public createBitmapByName(name:string):egret.Bitmap {
         var result = new egret.Bitmap();
         var texture:egret.Texture = RES.getRes(name);
